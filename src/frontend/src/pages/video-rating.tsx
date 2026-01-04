@@ -189,7 +189,12 @@ export default function VideoRating() {
             >
               {(category) => <SelectItem>{category.label}</SelectItem>}
             </Select>
-            <Button color="primary" disabled={loading} onPress={handleAdd}>
+            <Button
+              color="primary"
+              disabled={loading}
+              isLoading={loading}
+              onPress={handleAdd}
+            >
               添加
             </Button>
             {/* <Button>导出HTML</Button> */}
