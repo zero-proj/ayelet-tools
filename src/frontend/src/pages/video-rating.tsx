@@ -190,7 +190,7 @@ function Rating({
     <div
       ref={setNodeRef}
       className={clsx(
-        "border grid grid-flow-col justify-start align-middle items-center",
+        "grid grid-flow-col justify-start align-middle items-center",
         isOver ? "bg-white/30" : "",
       )}
       id={title}
@@ -296,7 +296,7 @@ export default function VideoRating() {
               {/* <Button>导出HTML</Button> */}
             </div>
           </div>
-          <div className="w-full">
+          <div className="w-full border border-white/50 rounded-2xl overflow-hidden">
             {rate ? (
               Object.entries(rate).map(([title, videos]) => (
                 <Rating
