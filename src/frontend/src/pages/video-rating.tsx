@@ -5,6 +5,13 @@ import { Select, SelectItem } from "@heroui/select";
 import { addToast } from "@heroui/toast";
 import { Card, CardFooter } from "@heroui/card";
 import { Image } from "@heroui/image";
+import {
+  DndContext,
+  DragEndEvent,
+  useDraggable,
+  useDroppable,
+} from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
 import clsx from "clsx";
 
 import DefaultLayout from "@/layouts/default";
@@ -82,12 +89,15 @@ function setBvToCategory(
   data: VideoCategories,
   category: string,
   bv: string,
-  info: VideoParseResult,
+  info?: VideoParseResult,
 ) {
   for (const [, records] of Object.entries(data)) {
+    if (!info && records[bv]) {
+      info = records[bv];
+    }
     delete records[bv];
   }
-  data[category][bv] = info;
+  data[category][bv] = info!;
 
   return Object.assign({}, data);
 }
@@ -119,12 +129,24 @@ function VideoCard({
   setRate: (rates: VideoCategories) => void;
   rate: VideoCategories;
 }) {
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: bv,
+  });
+
   function removeVideo() {
     setRate(set(removeFromCategory(rate, bv)));
   }
 
   return (
-    <div className="overflow-hidden h-40 min-w-40 w-40 hover:[&>button]:visible">
+    <div
+      ref={setNodeRef}
+      className="overflow-hidden h-40 min-w-40 w-40 hover:[&>button]:visible"
+      style={{
+        transform: CSS.Translate.toString(transform),
+      }}
+      {...listeners}
+      {...attributes}
+    >
       <Button
         isIconOnly
         className="fixed invisible text-tiny text-white bg-black/20 z-50"
@@ -162,8 +184,17 @@ function Rating({
   setRate: (rates: VideoCategories) => void;
   rate: VideoCategories;
 }) {
+  const { isOver, setNodeRef } = useDroppable({ id: title });
+
   return (
-    <div className="border grid grid-flow-col justify-start align-middle items-center border">
+    <div
+      ref={setNodeRef}
+      className={clsx(
+        "border grid grid-flow-col justify-start align-middle items-center",
+        isOver ? "bg-white/30" : "",
+      )}
+      id={title}
+    >
       <div
         className={clsx("h-full max-w-40 min-w-40 text-black", color[title])}
       >
@@ -216,55 +247,72 @@ export default function VideoRating() {
     setLoading(false);
   }
 
+  function handleDrag(ev: DragEndEvent) {
+    const bv = ev.active.id as string;
+
+    if (!bv) return;
+    if (!ev.over) {
+      setRate(set(removeFromCategory(rate, bv)));
+
+      return;
+    }
+
+    const target = ev.over.id as string;
+
+    setRate(set(setBvToCategory(rate, target, bv)))
+  }
+
   return (
     <DefaultLayout>
-      <div className="w-full p-4">
-        <div className="w-full flex justify-center pb-4">
-          <div className="flex justify-center items-start align-baseline w-1/2 gap-2">
-            <Input
-              className="w-60"
-              placeholder="输入BV号"
-              value={bv}
-              onValueChange={setBv}
-            />
-            <Select
-              className="max-w-32"
-              items={Object.keys(color).map((key) => ({ key, label: key }))}
-              selectedKeys={new Set([category])}
-              selectionMode="single"
-              onSelectionChange={([item]) =>
-                setCategory(`${item || category || "人上人"}`)
-              }
-            >
-              {(category) => <SelectItem>{category.label}</SelectItem>}
-            </Select>
-            <Button
-              color="primary"
-              disabled={loading}
-              isLoading={loading}
-              onPress={handleAdd}
-            >
-              添加
-            </Button>
-            {/* <Button>导出HTML</Button> */}
+      <DndContext onDragEnd={handleDrag}>
+        <div className="w-full p-4">
+          <div className="w-full flex justify-center pb-4">
+            <div className="flex justify-center items-start align-baseline w-1/2 gap-2">
+              <Input
+                className="w-60"
+                placeholder="输入BV号"
+                value={bv}
+                onValueChange={setBv}
+              />
+              <Select
+                className="max-w-32"
+                items={Object.keys(color).map((key) => ({ key, label: key }))}
+                selectedKeys={new Set([category])}
+                selectionMode="single"
+                onSelectionChange={([item]) =>
+                  setCategory(`${item || category || "人上人"}`)
+                }
+              >
+                {(category) => <SelectItem>{category.label}</SelectItem>}
+              </Select>
+              <Button
+                color="primary"
+                disabled={loading}
+                isLoading={loading}
+                onPress={handleAdd}
+              >
+                添加
+              </Button>
+              {/* <Button>导出HTML</Button> */}
+            </div>
+          </div>
+          <div className="w-full">
+            {rate ? (
+              Object.entries(rate).map(([title, videos]) => (
+                <Rating
+                  key={title}
+                  rate={rate}
+                  setRate={setRate}
+                  title={title}
+                  videos={videos}
+                />
+              ))
+            ) : (
+              <div>Loading...</div>
+            )}
           </div>
         </div>
-        <div className="w-full">
-          {rate ? (
-            Object.entries(rate).map(([title, videos]) => (
-              <Rating
-                key={title}
-                rate={rate}
-                setRate={setRate}
-                title={title}
-                videos={videos}
-              />
-            ))
-          ) : (
-            <div>Loading...</div>
-          )}
-        </div>
-      </div>
+      </DndContext>
     </DefaultLayout>
   );
 }
