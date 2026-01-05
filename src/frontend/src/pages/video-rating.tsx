@@ -217,6 +217,14 @@ function Rating({
   );
 }
 
+function tryGetBv(str: string) {
+  const result = /\/(BV.*?)(\/|$)/gm.exec(str);
+
+  if (result) return result[1];
+
+  return null;
+}
+
 export default function VideoRating() {
   const [rate, setRate] = useState<VideoCategories>(null!);
   const [bv, setBv] = useState<string>("");
@@ -226,6 +234,19 @@ export default function VideoRating() {
   useEffect(() => {
     if (!rate) setRate(get());
   });
+
+  function handleBvChange(str: string) {
+    if (!str.startsWith("BV") || str.length > 15) {
+      const result = tryGetBv(str);
+
+      if (result) {
+        setBv(result);
+
+        return;
+      }
+    }
+    setBv(str);
+  }
 
   async function handleAdd() {
     setLoading(true);
@@ -259,7 +280,7 @@ export default function VideoRating() {
 
     const target = ev.over.id as string;
 
-    setRate(set(setBvToCategory(rate, target, bv)))
+    setRate(set(setBvToCategory(rate, target, bv)));
   }
 
   return (
@@ -272,7 +293,7 @@ export default function VideoRating() {
                 className="w-60"
                 placeholder="输入BV号"
                 value={bv}
-                onValueChange={setBv}
+                onValueChange={handleBvChange}
               />
               <Select
                 className="max-w-32"
