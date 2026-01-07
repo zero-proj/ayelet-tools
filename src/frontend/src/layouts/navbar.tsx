@@ -1,11 +1,15 @@
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem } from "@heroui/navbar";
 import { Link } from "@heroui/link";
 
+import { useTitle } from "@/util/title-provider";
+
 export default function TopNavbar() {
+  const { title } = useTitle();
+
   return (
     <Navbar>
       <NavbarBrand>
-        <p className="font-bold text-inherit">玩伊会工具箱</p>
+        <p className="font-bold text-inherit">{title}</p>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>

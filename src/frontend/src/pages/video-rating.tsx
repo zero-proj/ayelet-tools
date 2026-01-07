@@ -15,6 +15,7 @@ import { CSS } from "@dnd-kit/utilities";
 import clsx from "clsx";
 
 import DefaultLayout from "@/layouts/default";
+import { useTitle } from "@/util/title-provider";
 
 interface VideoParseResult {
   title: string;
@@ -226,6 +227,10 @@ function tryGetBv(str: string) {
 }
 
 export default function VideoRating() {
+  const { setPageName } = useTitle();
+
+  setPageName("视频从夯到拉");
+
   const [rate, setRate] = useState<VideoCategories>(null!);
   const [bv, setBv] = useState<string>("");
   const [category, setCategory] = useState<string>("人上人");

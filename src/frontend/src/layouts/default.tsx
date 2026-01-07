@@ -10,7 +10,7 @@ export default function DefaultLayout({
       <TopNavbar />
       <main className="container mx-auto px-6 grow">{children}</main>
       <footer className="w-full flex items-center justify-center py-3">
-        <span>Powered by 玩伊会</span>
+        <span>Powered by ZeroAsh</span>
       </footer>
     </div>
   );
