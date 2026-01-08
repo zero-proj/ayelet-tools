@@ -234,7 +234,7 @@ function tryGetBv(str: string) {
 export default function VideoRating() {
   const { setPageName } = useTitle();
 
-  useEffect(() => setPageName("视频从夯到拉"));
+  useEffect(() => setPageName("视频从夯到拉"), []);
 
   const [rate, setRate] = useState<VideoCategories>(null!);
   const [bv, setBv] = useState<string>("");
@@ -243,7 +243,7 @@ export default function VideoRating() {
 
   useEffect(() => {
     if (!rate) setRate(get());
-  });
+  }, []);
 
   function handleBvChange(str: string) {
     if (!str.startsWith("BV") || str.length > 15) {
