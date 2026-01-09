@@ -1,7 +1,7 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-import VideoRating from "@/pages/video-rating";
+import Rating from "@/pages/rating";
 import LolDice from "@/pages/lol-dice";
 
 function App() {
@@ -18,8 +18,8 @@ function App() {
 
   return (
     <Routes>
-      <Route element={<VideoRating />} path="/" />
-      <Route element={<VideoRating />} path="/video-rating" />
+      <Route element={<Rating />} path="/" />
+      <Route element={<Rating />} path="/rating" />
       <Route element={<LolDice />} path="/lol-dice" />
     </Routes>
   );

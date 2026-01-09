@@ -13,8 +13,8 @@ export default function TopNavbar() {
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
         <NavbarItem>
-          <Link color="foreground" href="/video-rating">
-            视频从夯到拉
+          <Link color="foreground" href="/rating">
+            从夯到拉
           </Link>
         </NavbarItem>
         <NavbarItem>

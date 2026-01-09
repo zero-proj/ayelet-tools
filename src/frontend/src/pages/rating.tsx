@@ -17,22 +17,23 @@ import clsx from "clsx";
 import DefaultLayout from "@/layouts/default";
 import { useTitle } from "@/util/title-provider";
 
-interface VideoParseResult {
+interface RateItem {
   title: string;
   author: string;
   image: string;
   url: string;
+  type: "bangumi-subject" | "lastfm-track" | null;
 }
 
 interface VideoCategories {
-  [x: string]: { [bv: string]: VideoParseResult };
-  夯爆了: { [bv: string]: VideoParseResult };
-  夯: { [bv: string]: VideoParseResult };
-  顶级: { [bv: string]: VideoParseResult };
-  人上人: { [bv: string]: VideoParseResult };
-  NPC: { [bv: string]: VideoParseResult };
-  拉: { [bv: string]: VideoParseResult };
-  拉完了: { [bv: string]: VideoParseResult };
+  [x: string]: { [bv: string]: RateItem };
+  夯爆了: { [bv: string]: RateItem };
+  夯: { [bv: string]: RateItem };
+  顶级: { [bv: string]: RateItem };
+  人上人: { [bv: string]: RateItem };
+  NPC: { [bv: string]: RateItem };
+  拉: { [bv: string]: RateItem };
+  拉完了: { [bv: string]: RateItem };
 }
 
 const color: Record<string, string> = {
@@ -49,7 +50,7 @@ async function getVideoInfo(bv: string) {
   const existsBv = localStorage.getItem(bv);
 
   if (existsBv) {
-    return JSON.parse(existsBv) as VideoParseResult;
+    return JSON.parse(existsBv) as RateItem;
   }
   const res = await fetch(
     `https://ayelet-tools.fffdan.com/api/v1/bilibili/cover/${bv}`,
@@ -58,7 +59,7 @@ async function getVideoInfo(bv: string) {
     },
   );
 
-  const result = (await res.json()) as VideoParseResult;
+  const result = (await res.json()) as RateItem;
 
   localStorage.setItem(bv, JSON.stringify(result));
 
@@ -90,7 +91,7 @@ function setBvToCategory(
   data: VideoCategories,
   category: string,
   bv: string,
-  info?: VideoParseResult,
+  info?: RateItem,
 ) {
   for (const [, records] of Object.entries(data)) {
     if (!info && records[bv]) {
@@ -119,14 +120,14 @@ function set(value: VideoCategories) {
   return value;
 }
 
-function VideoCard({
+function RateItemCard({
   video,
   setRate,
   rate,
   bv,
 }: {
   bv: string;
-  video: VideoParseResult;
+  video: RateItem;
   setRate: (rates: VideoCategories) => void;
   rate: VideoCategories;
 }) {
@@ -186,7 +187,7 @@ function Rating({
   rate,
 }: {
   title: string;
-  videos: { [bv: string]: VideoParseResult };
+  videos: { [bv: string]: RateItem };
   setRate: (rates: VideoCategories) => void;
   rate: VideoCategories;
 }) {
@@ -210,7 +211,7 @@ function Rating({
       </div>
       <div className="w-full flex flex-wrap grow min-h-20 gap-2 p-2">
         {Object.entries(videos).map(([bv, video]) => (
-          <VideoCard
+          <RateItemCard
             key={bv}
             bv={bv}
             rate={rate}
