@@ -2,6 +2,7 @@ using Mikibot.Crawler.Http.Bilibili;
 using ZeroAshTools.Backend.Data;
 using ZeroAshTools.Backend.Service;
 using ZeroAshTools.Backend.Service.Bilibili;
+using ZeroAshTools.Backend.Service.LastFm;
 
 if (!Directory.Exists("data"))
 {
@@ -9,9 +10,8 @@ if (!Directory.Exists("data"))
 }
 
 var builder = WebApplication.CreateSlimBuilder(args);
-builder.Services.AddSingleton<HttpClient>();
-builder.Services.AddSingleton<BiliVideoCrawler>();
-builder.Services.AddCache<BilibiliVideoInfoProvider>();
+builder.Services.AddBilibiliProvider();
+builder.Services.AddLastfmProvider();
 
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -51,5 +51,15 @@ bilibiliApi.MapGet("/cover/{bv}", async (string bv, CancellationToken cancellati
         return Results.NotFound();
     }
 }).RequireCors("trust-sites");
+
+var lastfmApi = app.MapGroup("/api/v1/lastfm");
+var lastfmProvider = app.Services.GetRequiredService<LastFmInfoProvider>();
+lastfmApi.MapGet("/tracks/{term}",
+    async (string term, CancellationToken cancellationToken) =>
+        Results.Ok(await lastfmProvider.SearchSongs(term, 1, cancellationToken)));
+
+lastfmApi.MapGet("/artist/{term}",
+    async (string term, CancellationToken cancellationToken) =>
+        Results.Ok(await lastfmProvider.SearchArtist(term, 1, cancellationToken)));
 
 app.Run();

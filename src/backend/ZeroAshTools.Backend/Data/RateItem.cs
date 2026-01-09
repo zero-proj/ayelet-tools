@@ -2,9 +2,9 @@ using System.Text.Json.Serialization;
 
 namespace ZeroAshTools.Backend.Data;
 
-public record VideoParseResult(string Title, string Author, string Image, string Url);
+public record RateItem(string Title, string Author, string Image, string Url, string Type);
 
-[JsonSerializable(typeof(VideoParseResult[]))]
+[JsonSerializable(typeof(RateItem[]))]
 internal partial class AppJsonSerializerContext : JsonSerializerContext
 {
 }
