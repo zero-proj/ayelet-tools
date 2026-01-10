@@ -31,9 +31,7 @@ async function searchDirect({
 }) {
   if (!filterText || filterText.length === 0) return { items: [] };
   await delay(500);
-  if (signal.aborted) return;
-  console.log(`${filterText}`);
-  
+  if (signal.aborted) return { items: [] };
   const response = await fetch(
     "https://api.bgm.tv/v0/search/subjects?limit=20&offset=0",
     {
@@ -68,25 +66,6 @@ async function searchDirect({
         }) as RateItem,
     ),
   };
-}
-
-async function searchViaInnerApi({
-  filterText,
-  signal,
-}: {
-  filterText?: string;
-  signal: AbortSignal;
-}) {
-  if (!filterText) return { items: [] };
-  await delay(500);
-  if (signal.aborted) return;
-  const response = await fetch(
-    `https://ayelet-tools.fffdan.com/api/v1/bangumi/subject/${filterText}`,
-    { signal },
-  );
-  const items = (await response.json()) as Array<RateItem>;
-
-  return { items };
 }
 
 export default function BangumiSubjectProvider() {
