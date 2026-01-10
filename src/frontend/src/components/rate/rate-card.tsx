@@ -3,8 +3,13 @@ import { useDraggable } from "@dnd-kit/core";
 import { Button } from "@heroui/button";
 import { Image } from "@heroui/image";
 import { Card, CardFooter } from "@heroui/card";
+import clsx from "clsx";
 
 import useRating, { RateItem } from "@/contexts/rating-context";
+
+const cardSizeMap: Record<string, string> = {
+  "bangumi-subject": "w-48 h-64",
+};
 
 export default function RateItemCard({ item }: { item: RateItem }) {
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -35,7 +40,14 @@ export default function RateItemCard({ item }: { item: RateItem }) {
       >
         x
       </Button>
-      <Card isFooterBlurred className="border-none min-h-40" radius="lg">
+      <Card
+        isFooterBlurred
+        className={clsx(
+          "border-none min-h-40",
+          cardSizeMap[item.type || "bilibili-video"],
+        )}
+        radius="lg"
+      >
         <Image
           alt="video.title"
           className="object-cover min-h-40"
