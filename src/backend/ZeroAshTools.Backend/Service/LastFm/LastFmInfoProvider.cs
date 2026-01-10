@@ -12,6 +12,7 @@ public class LastFmInfoProvider(LastfmClient client)
         var result = await client.Track.SearchAsync(term, page).WaitAsync(cancellationToken);
         return result.Content.Select(track
             => new RateItem(
+                $"{track.Mbid ?? track.Name}",
                 track.Name, 
                 $"{track.ArtistName}", 
                 track.Images.Medium?.AbsoluteUri ?? "",
@@ -26,6 +27,7 @@ public class LastFmInfoProvider(LastfmClient client)
 
         return result.Content.Select(artist =>
             new RateItem(
+                $"{artist.Mbid ?? artist.Name}",
                 artist.Name,
                 "",
                 artist.MainImage.Medium?.AbsoluteUri ?? "",

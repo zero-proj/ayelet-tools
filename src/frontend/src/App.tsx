@@ -20,6 +20,7 @@ function App() {
     <Routes>
       <Route element={<Rating />} path="/" />
       <Route element={<Rating />} path="/rating" />
+      <Route element={<Rating />} path="/video-rating" />
       <Route element={<LolDice />} path="/lol-dice" />
     </Routes>
   );

@@ -14,6 +14,7 @@ public class BilibiliVideoInfoProvider(
         var data = await httpClient.GetByteArrayAsync($"{info.CoverUrl}@300w_168h_1c.jpg", cancellationToken);
         var dataUri = $"data:image/jpeg;base64,{Convert.ToBase64String(data)}";
         return new RateItem(
+            key,
             info.Title,
             info.Owner.Name,
             dataUri,

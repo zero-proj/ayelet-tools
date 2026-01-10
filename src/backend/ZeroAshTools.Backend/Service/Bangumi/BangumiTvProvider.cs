@@ -20,6 +20,7 @@ public class BangumiTvProvider(ApiClient client)
         }, cancellationToken: cancellationToken);
 
         return (result?.Data ?? []).Select((s) => new RateItem(
+            $"bangumi.tv/subject/{s.Id}",
             $"{s.NameCn} / {s.Name}",
             "",
             s.Images?.Common ?? "",
