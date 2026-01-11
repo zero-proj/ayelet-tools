@@ -35,14 +35,12 @@ export default function RateRenderModal({
     if (isOpen) {
       drawRatesToCanvas(rates, null!, {
         backgroundColor,
-      })
-        .then((data) => {
-          setDrawing(false);
-          setImage(data);
-        })
-        .catch((err) => console.error(err));
+      }).then((data) => {
+        setDrawing(false);
+        setImage(data);
+      });
     }
-  }, [rates, bg, backgroundColor]);
+  }, [rates, bg, backgroundColor, isOpen]);
 
   return (
     <Modal isOpen={isOpen} size="3xl" onOpenChange={onOpenChange}>
