@@ -1,6 +1,9 @@
 import { useMemo, useState } from "react";
 import { Select, SelectItem } from "@heroui/select";
 import { Button } from "@heroui/button";
+import { useDisclosure } from "@heroui/modal";
+
+import RateRenderModal from "../rate-render-modal";
 
 import BangumiSubjectProvider from "./provider/bangumi";
 import BilibiliVideoProvider from "./provider/bilibili";
@@ -14,6 +17,7 @@ export default function RateToolbar() {
   const [provider, setProvider] =
     useState<keyof typeof dataProviders>("bilibili.com");
   const CurrentProvider = useMemo(() => dataProviders[provider], [provider]);
+  const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   return (
     <div className="w-full flex pb-4 items-center gap-4">
@@ -38,7 +42,8 @@ export default function RateToolbar() {
         <CurrentProvider />
       </div>
       <div className="grow-[1] flex justify-end">
-        <Button>复制图片</Button>
+        <Button onPress={onOpen}>生成图片</Button>
+        <RateRenderModal isOpen={isOpen} onOpenChange={onOpenChange} />
       </div>
     </div>
   );
