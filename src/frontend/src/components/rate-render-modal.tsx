@@ -17,9 +17,9 @@ import useRating from "@/contexts/rating-context";
 function getProviderDrawConfig(provider: string): Partial<DrawConfig> {
   if (provider === "番剧") {
     return {
-      cardHeight: 280,
-      cardWidth: 180,
-      cardImageHeight: 220,
+      cardHeight: 320,
+      cardWidth: 225,
+      cardImageHeight: 260,
     };
   }
 
