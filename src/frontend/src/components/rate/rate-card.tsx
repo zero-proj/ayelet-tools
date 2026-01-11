@@ -9,6 +9,7 @@ import useRating, { RateItem } from "@/contexts/rating-context";
 
 const cardSizeMap: Record<string, string> = {
   "bangumi-subject": "w-48 h-64",
+  "bilibili-video": "w-60",
 };
 
 export default function RateItemCard({ item }: { item: RateItem }) {
@@ -23,7 +24,7 @@ export default function RateItemCard({ item }: { item: RateItem }) {
   return (
     <div
       ref={setNodeRef}
-      className="overflow-hidden min-w-60 w-60 hover:[&>button]:visible"
+      className="overflow-hidden hover:[&>button]:visible"
       style={{
         transform: CSS.Translate.toString(transform),
       }}

@@ -92,7 +92,7 @@ export default function BangumiSubjectProvider() {
       >
         {(item) => (
           <AutocompleteItem key={item.id}>
-            <div className="flex">
+            <div className="flex gap-2">
               {item.image ? (
                 <img alt="bangumi" className="w-10 h-16" src={item.image} />
               ) : (

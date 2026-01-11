@@ -37,6 +37,44 @@ const DEFAULT_CONFIG = {
   imageLoadErrorText: "Image Load Failed",
 };
 
+function drawCoverImage({
+  ctx,
+  img,
+  x,
+  y,
+  width,
+  height,
+}: {
+  ctx: CanvasRenderingContext2D;
+  img: HTMLImageElement;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+}) {
+  const boxRatio = width / height;
+  const imgRatio = img.width / img.height;
+
+  let sx = 0,
+    sy = 0,
+    sw = 0,
+    sh = 0;
+
+  if (imgRatio <= boxRatio) {
+    sw = img.width;
+    sh = sw / boxRatio;
+    sx = 0;
+    sy = (img.height - sh) / 2;
+  } else {
+    sh = img.height;
+    sw = sh * boxRatio;
+    sx = (img.width - sw) / 2;
+    sy = 0;
+  }
+
+  ctx.drawImage(img, sx, sy, sw, sh, x, y, width, height);
+}
+
 // 绘制圆角矩形
 function drawRoundedRect(
   ctx: CanvasRenderingContext2D,
@@ -82,7 +120,7 @@ function fillEllipsis(
   return y; // 返回最后一行Y坐标
 }
 
-interface DrawConfig {
+export interface DrawConfig {
   canvasWidth: number;
   canvasHeight: number;
   backgroundColor: string;
@@ -242,17 +280,14 @@ export async function drawRatesToCanvas(
             cfg.cardBorderRadius,
           );
           ctx.clip(); // 裁剪区域
-          ctx.drawImage(
+          drawCoverImage({
+            ctx,
             img,
-            0,
-            0,
-            cfg.cardWidth,
-            cfg.cardHeight,
-            currentCardX,
-            currentCardY,
-            cfg.cardWidth,
-            cfg.cardHeight,
-          );
+            x: currentCardX,
+            y: currentCardY,
+            width: cfg.cardWidth,
+            height: cfg.cardHeight,
+          });
           ctx.fillStyle = cfg.cardBackgroundColor;
           ctx.fillRect(
             currentCardX,

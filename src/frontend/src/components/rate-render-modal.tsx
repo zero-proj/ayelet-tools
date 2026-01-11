@@ -11,15 +11,29 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { useTheme } from "@heroui/use-theme";
 
-import { drawRatesToCanvas } from "@/util/rate-canvas-render";
+import { DrawConfig, drawRatesToCanvas } from "@/util/rate-canvas-render";
 import useRating from "@/contexts/rating-context";
+
+function getProviderDrawConfig(provider: string): Partial<DrawConfig> {
+  if (provider === "番剧") {
+    return {
+      cardHeight: 280,
+      cardWidth: 180,
+      cardImageHeight: 220,
+    };
+  }
+
+  return {};
+}
 
 export default function RateRenderModal({
   isOpen,
   onOpenChange,
+  provider,
 }: {
   isOpen: boolean;
   onOpenChange: () => void;
+  provider: string;
 }) {
   const { theme } = useTheme();
   const { rates } = useRating();
@@ -35,12 +49,13 @@ export default function RateRenderModal({
     if (isOpen) {
       drawRatesToCanvas(rates, null!, {
         backgroundColor,
+        ...getProviderDrawConfig(provider),
       }).then((data) => {
         setDrawing(false);
         setImage(data);
       });
     }
-  }, [rates, bg, backgroundColor, isOpen]);
+  }, [rates, bg, backgroundColor, isOpen, provider]);
 
   return (
     <Modal isOpen={isOpen} size="3xl" onOpenChange={onOpenChange}>

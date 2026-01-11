@@ -9,13 +9,13 @@ import BangumiSubjectProvider from "./provider/bangumi";
 import BilibiliVideoProvider from "./provider/bilibili";
 
 const dataProviders = {
-  "bilibili.com": BilibiliVideoProvider,
-  "bangumi.tv": BangumiSubjectProvider,
+  B站视频: BilibiliVideoProvider,
+  番剧: BangumiSubjectProvider,
 };
 
 export default function RateToolbar() {
   const [provider, setProvider] =
-    useState<keyof typeof dataProviders>("bilibili.com");
+    useState<keyof typeof dataProviders>("B站视频");
   const CurrentProvider = useMemo(() => dataProviders[provider], [provider]);
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
@@ -32,7 +32,7 @@ export default function RateToolbar() {
           selectedKeys={new Set([provider])}
           selectionMode="single"
           onSelectionChange={([item]) =>
-            setProvider((item as any) || "bilibili.com")
+            setProvider((item as any) || "B站视频")
           }
         >
           {(key) => <SelectItem>{key.label}</SelectItem>}
@@ -42,8 +42,14 @@ export default function RateToolbar() {
         <CurrentProvider />
       </div>
       <div className="grow-[1] flex justify-end">
-        <Button onPress={onOpen}>生成图片</Button>
-        <RateRenderModal isOpen={isOpen} onOpenChange={onOpenChange} />
+        <Button color="primary" onPress={onOpen}>
+          生成图片
+        </Button>
+        <RateRenderModal
+          isOpen={isOpen}
+          provider={provider}
+          onOpenChange={onOpenChange}
+        />
       </div>
     </div>
   );
