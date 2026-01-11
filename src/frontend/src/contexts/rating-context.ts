@@ -12,6 +12,7 @@ export interface RateItem {
 export type Rates = Record<string, RateItem[]>;
 
 const key = "RATED_CATEGORIES";
+const oldKey = "RATED_VIDEOS";
 
 const init = () =>
   ({
@@ -25,6 +26,31 @@ const init = () =>
   }) as Rates;
 
 function get() {
+  if (!localStorage.getItem(key) && localStorage.getItem(oldKey)) {
+    const old = JSON.parse(localStorage.getItem(oldKey)!) as {};
+
+    localStorage.setItem(
+      key,
+      JSON.stringify(
+        Object.entries(old).reduce(
+          (prev, curr) =>
+            Object.assign(prev, {
+              [curr[0]]: Object.entries(curr[1] as any).map(([itemKey, item]) =>
+                Object.assign(item as any, {
+                  id: itemKey,
+                  type: "bilibili-video",
+                }),
+              ),
+            }),
+          {},
+        ),
+      ),
+    );
+
+    localStorage.setItem(oldKey + "_BACKUP", localStorage.getItem(oldKey)!);
+    localStorage.removeItem(oldKey);
+  }
+
   const str = localStorage.getItem(key);
 
   if (!str) {
