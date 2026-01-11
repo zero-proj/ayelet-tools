@@ -86,8 +86,8 @@ export default function RateRenderModal({
               )}
             </ModalBody>
             <ModalFooter>
-              <Button color="danger" variant="light" onPress={onClose}>
-                Close
+              <Button variant="light" onPress={onClose}>
+                关闭
               </Button>
             </ModalFooter>
           </>
