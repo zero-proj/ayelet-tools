@@ -148,11 +148,7 @@ export async function drawRatesToCanvas(
 
   // 确保 Canvas 高度至少能容纳左侧边栏
   canvas.width = cfg.canvasWidth;
-  canvas.height = Math.max(
-    cfg.canvasHeight,
-    numCategories * cfg.sidebarItemHeight,
-    maxContentHeight,
-  );
+  canvas.height = maxContentHeight;
 
   // 1. 绘制整体背景
   ctx.fillStyle = cfg.backgroundColor;
