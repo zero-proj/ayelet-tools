@@ -94,7 +94,14 @@ export const useEmptyRatingContext = () => {
     });
   }
 
-  return { rates, addItem, removeItem };
+  function clear() {
+    const empty = init();
+
+    updateRates(empty);
+    set(empty);
+  }
+
+  return { rates, addItem, removeItem, clear };
 };
 
 export const RatingContext = createContext<

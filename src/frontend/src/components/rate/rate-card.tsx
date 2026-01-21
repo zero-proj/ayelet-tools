@@ -52,6 +52,7 @@ export default function RateItemCard({ item }: { item: RateItem }) {
         <Image
           alt="video.title"
           className="object-cover min-h-40"
+          referrerPolicy="no-referrer"
           src={item.image}
         />
         <CardFooter className="justify-between bg-black/75 before:bg-black/75 overflow-hidden py-1 absolute before:rounded-t-sm rounded-t-sm bottom-0 w-full z-10 h-10">
